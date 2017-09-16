@@ -3,3 +3,4 @@
 cabal.config
 matching.csv
 .stack-work/
+out/

@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
+--{-# LANGUAGE OverloadedStrings #-}
 
 module Scraping (
   getAllMatchingList
@@ -38,21 +38,21 @@ instance Show Matching where
 -- クラス属性に空白入るとおかしい？
 -- 空白に入る前までの文字列を入力すればOK
 findUsers :: Scraper String [(User, URL)]
-findUsers = chroots ("td" @: [hasClass "SummonerName"]) findUser
+findUsers = chroots (TagString "td" @: [hasClass "SummonerName"]) findUser
 
 findUser :: Scraper String (User, URL)
 findUser = do
-  user <- text $ "a" @: [hasClass "Link"]
-  url <- attr "href" $ "a" @: [hasClass "Link"]
+  user <- text $ TagString "a" @: [hasClass "Link"]
+  url <- attr "href" $ TagString "a" @: [hasClass "Link"]
   return (User user, URL url)
 
 findItems :: Scraper String [Item]
-findItems = chroots ("div" @: [hasClass "GameItemWrap"]) findItem
+findItems = chroots (TagString "div" @: [hasClass "GameItemWrap"]) findItem
 
 findItem :: Scraper String Item
 findItem = do
-  wl <- text $ "div" @: [hasClass "GameResult"]
-  ab <- chroots ("div" @: [hasClass "Summoner"]) findAB
+  wl <- text $ TagString "div" @: [hasClass "GameResult"]
+  ab <- chroots (TagString "div" @: [hasClass "Summoner"]) findAB
   let (aTeam, bTeam) = splitAt 5 ab :: ([Player], [Player])
       simpleWl = filter (/= '\n') . filter (/='\t') $ wl
       winLose = if simpleWl == "Victory" then Win else Lose
@@ -60,8 +60,8 @@ findItem = do
 
 findAB :: Scraper String Player
 findAB = do
-  champ <- text $ "div" @: [hasClass "ChampionImage"] // "div"
-  user <- text $ "div" @: [hasClass "SummonerName"] // "a"
+  champ <- text $ TagString "div" @: [hasClass "ChampionImage"] // tagSelector "div"
+  user <- text $ TagString "div" @: [hasClass "SummonerName"] // tagSelector "a"
   return $ Player (Champ champ) (User user)
 
 judgeWinLoseList :: User -> [Item] -> [Matching]
