@@ -15,15 +15,15 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Data.String.Strip
-  build-depends:       base >= 4.7 && < 5
+  exposed-modules:     Scraping
+  build-depends:       base >= 4.7 && < 5, scalpel
   default-language:    Haskell2010
 
 executable ScrapingKZTK
   hs-source-dirs:      app
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
-  build-depends:       base, scalpel
+  build-depends:       base
                      , ScrapingKZTK
   default-language:    Haskell2010
 
