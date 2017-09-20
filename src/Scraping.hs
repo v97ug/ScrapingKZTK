@@ -77,6 +77,12 @@ judgeWinLoseList user = map judgeWinLose
 getUsers :: [Player] -> [User]
 getUsers = map getUser
 
+filter5 :: [Matching] -> [Matching]
+filter5 = filter less5Len
+  where
+    less5Len :: Matching -> Bool
+    less5Len (Matching a b winner) = not (null b)
+
 getAllMatchingList :: IO String
 getAllMatchingList = do
   let overViewURL = "http://jp.op.gg/ranking/ladder/"
@@ -85,4 +91,4 @@ getAllMatchingList = do
       items <- scrapeURL ("http:" ++ url) findItems
       return $ judgeWinLoseList user (fromMaybe [] items)
 
-  return $ (unlines . map show . nub . concat) matchingList
+  return $ (unlines . map show . filter5 . nub . concat) matchingList
